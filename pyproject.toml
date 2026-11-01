@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "anime-filter"
+version = "0.1.0"
+description = "Webcam filters driven by gestures and hotkeys, exposed as a virtual camera (Teams, Discord, Meet, OBS...)."
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Alessandro Mulé", email = "1021565+rhllor@users.noreply.github.com" }]
+keywords = ["webcam", "virtual-camera", "gesture", "mediapipe", "opencv"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Multimedia :: Video :: Capture",
+]
+dependencies = [
+    "numpy>=1.26",
+    # NB: mediapipe dipende già da opencv-contrib-python. Non aggiungere anche
+    # "opencv-python": i due pacchetti forniscono lo stesso modulo `cv2` e vanno in conflitto.
+    "opencv-contrib-python>=4.9",
+    "mediapipe>=0.10.14",
+    "pyvirtualcam>=0.12",
+    "platformdirs>=4.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/rhllor/anime-filter"
+Issues = "https://github.com/rhllor/anime-filter/issues"
+
+[project.scripts]
+anime-filter = "anime_filter.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "pre-commit>=3.8",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/anime_filter"]
+
+# ---------------------------------------------------------------- tooling ---
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+packages = ["anime_filter"]
+
+[[tool.mypy.overrides]]
+module = ["cv2.*", "mediapipe.*", "pyvirtualcam.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = ["hardware: richiede webcam / virtual camera reale (esclusi in CI)"]

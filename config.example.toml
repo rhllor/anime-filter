@@ -1,0 +1,22 @@
+# Copia in config.toml e passalo con: anime-filter run --config config.toml
+# Gli argomenti da riga di comando hanno la precedenza su questo file.
+
+[camera]
+index = 0
+width = 1280
+height = 720
+fps = 30
+
+[output]
+virtual_camera = true
+# null = auto (OBS su Win/macOS, v4l2loopback su Linux). Valori: "obs", "v4l2loopback", "unitycapture"
+backend = ""
+# Solo Linux: es. "/dev/video10"
+device = ""
+preview = true
+mirror_preview = true
+
+[gestures]
+enabled = true
+hold_frames = 5      # frame consecutivi necessari per confermare un gesto
+cooldown_s = 1.5     # pausa minima tra due attivazioni
